@@ -11,12 +11,13 @@ cuda = True if torch.cuda.is_available() else False
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-content', help='Content input')
-parser.add_argument('-content_weight', help='Content weight. Default is 1e2', default = 1e2)
+parser.add_argument('-content_weight', help='Content weight. Default is 1e2', default = 0.5)
 parser.add_argument('-style', help='Style input')
 parser.add_argument('-style_weight', help='Style weight. Default is 1', default = 1)
-parser.add_argument('-epochs', type=int, help='Number of epoch iterations. Default is 20000', default = 20000)
+parser.add_argument('-epochs', type=int, help='Number of epoch iterations. Default is 20000', default = 100000)
 parser.add_argument('-print_interval', type=int, help='Number of epoch iterations between printing losses', default = 1000)
 parser.add_argument('-plot_interval', type=int, help='Number of epoch iterations between plot points', default = 1000)
+parser.add_argument('-save_interval', type=int, help='Number of epoch iterations between save output', default = 500)
 parser.add_argument('-learning_rate', type=float, default = 0.002)
 parser.add_argument('-output', help='Output file name. Default is "output"', default = 'output')
 args = parser.parse_args()
@@ -66,6 +67,7 @@ content_param = args.content_weight
 num_epochs = args.epochs
 print_every = args.print_interval
 plot_every = args.plot_interval
+save_interval = args.save_interval
 
 # Keep track of losses for plotting
 current_loss = 0
@@ -106,9 +108,13 @@ for epoch in range(1, num_epochs + 1):
         all_losses.append(current_loss / plot_every)
         current_loss = 0
 
+    if epoch % save_interval == 0:
+        gen_spectrum = a_G_var.cpu().data.numpy().squeeze()
+        gen_audio_C = args.output + "_" + str(epoch) + ".wav"
+        spectrum2wav(gen_spectrum, sr, gen_audio_C)
 
 gen_spectrum = a_G_var.cpu().data.numpy().squeeze()
-gen_audio_C = args.output + ".wav"
+gen_audio_C = args.output + "_final.wav"
 spectrum2wav(gen_spectrum, sr, gen_audio_C)
 
 plt.figure()
