@@ -11,7 +11,7 @@ cuda = True if torch.cuda.is_available() else False
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-content', help='Content input')
-parser.add_argument('-content_weight', help='Content weight. Default is 1e2', default = 0.5)
+parser.add_argument('-content_weight', help='Content weight. Default is 1e2', default = 1e2)
 parser.add_argument('-style', help='Style input')
 parser.add_argument('-style_weight', help='Style weight. Default is 1', default = 1)
 parser.add_argument('-epochs', type=int, help='Number of epoch iterations. Default is 20000', default = 100000)
