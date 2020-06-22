@@ -7,6 +7,7 @@ from model import *
 import time
 import math
 import argparse
+from tqdm import tqdm
 cuda = True if torch.cuda.is_available() else False
 
 parser = argparse.ArgumentParser()
@@ -84,7 +85,7 @@ def timeSince(since):
 
 start = time.time()
 # Train the Model
-for epoch in range(1, num_epochs + 1):
+for epoch in tqdm(range(1, num_epochs + 1)):
     optimizer.zero_grad()
     a_G = model(a_G_var)
 
